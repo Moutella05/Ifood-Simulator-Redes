@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { usePedido } from "../context/PedidoContext";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const { setLogs, carregando, setCarregando } = usePedido();
+
+  const [usuarioInput, setUsuarioInput] = useState("");
+  const [senhaInput, setSenhaInput] = useState("");
 
   const adicionarLog = (
     protocolo: string,
@@ -137,23 +140,23 @@ export default function Login() {
           <input
             type="text"
             placeholder="Usuário"
-            value={login}
-            onChange={(e) => setLogin(e.target.value)}
+            value={usuarioInput}
+            onChange={(e) => setUsuarioInput(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
           />
 
           <input
             type="password"
             placeholder="Senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={senhaInput}
+            onChange={(e) => setSenhaInput(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
           />
         </div>
 
         <button
           onClick={handleLogin}
-          disabled={carregando || login.trim() === "" || senha.trim() === ""}
+          disabled={carregando || usuarioInput.trim() === "" || senhaInput.trim() === ""}
           className={`w-full font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm active:scale-[0.98]
     ${
       carregando
