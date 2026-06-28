@@ -16,27 +16,29 @@ wss.on('connection', (ws) => {
 
     if (progresso <= 100) {
       let mensagemLog = '';
-      
-      if (progresso === 20) mensagemLog = 'Pedido aceito e em preparação';
-      if (progresso === 40) font = 'O entregador aceitou a rota e está aguardando a coleta';
-      if (progresso === 60) mensagemLog = 'Pedido coletado! Entregador a caminho da sua localização';
-      if (progresso === 80) mensagemLog = 'Entregador chegando!';
-      if (progresso === 100) mensagemLog = '🛵 Entrega concluída!';
 
-      ws.send(JSON.stringify({
-        protocolo: 'WS / Rastreio',
-        mensagem: `[Progresso ${progresso}%] ${mensagemLog}`,
-        progresso: progresso
-      }));
+      if (progresso === 20) mensagemLog = 'Pedido aceito. Restaurante iniciando preparo.';
+      if (progresso === 40) mensagemLog = 'Pedido sendo preparado.';
+      if (progresso === 60) mensagemLog = 'Pedido em trânsito. Entregador a caminho.';
+      if (progresso === 80) mensagemLog = 'Entregador chegando à sua localização.';
+      if (progresso === 100) mensagemLog = 'Pedido entregue. Bom apetite!';
+
+      ws.send(
+        JSON.stringify({
+          protocolo: 'WS / Rastreio',
+          mensagem: `[Progresso ${progresso}%] ${mensagemLog}`,
+          progresso: progresso,
+        }),
+      );
     }
 
     //ENCERRAMENTO DA CONEXÃO
     if (progresso >= 100) {
-      clearInterval(intervalo); 
-      
+      clearInterval(intervalo);
+
       setTimeout(() => {
         console.log('❌ Fechando conexão com o cliente (Entrega concluída).');
-        ws.close(); /
+        ws.close();
       }, 2000);
     }
   }, 2500); 
