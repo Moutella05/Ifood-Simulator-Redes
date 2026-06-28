@@ -1,0 +1,13 @@
+
+[
+	{
+		"id": 1,
+		"usuario": "aluno",
+		"senha": "senha123"
+	},
+	{
+		"id": 2,
+		"usuario": "professor",
+		"senha": "ifood2026"
+	}
+]

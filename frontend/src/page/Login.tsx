@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import usuarios from "../data/Usuarios.json";
+import { z } from "zod";
 import { usePedido } from "../context/PedidoContext";
 
 export default function Login() {
@@ -27,6 +29,46 @@ export default function Login() {
     setCarregando(true);
     setLogs([]);
 
+    const loginSchema = z.object({
+      usuario: z.string().min(1),
+      senha: z.string().min(1),
+    });
+
+    const parsed = loginSchema.safeParse({
+      usuario: usuarioInput,
+      senha: senhaInput,
+    });
+
+    if (!parsed.success) {
+      adicionarLog(
+        "HTTP",
+        "HTTP/1.1 400 Bad Request - Dados de login inválidos",
+        "info",
+        0,
+      );
+
+      setCarregando(false);
+      return;
+    }
+
+    const found = (usuarios as any[]).find(
+      (u) => u.usuario === usuarioInput && u.senha === senhaInput,
+    );
+
+    if (!found) {
+      // Credenciais não conferem -> 403 no terminal
+      adicionarLog(
+        "HTTP",
+        "HTTP/1.1 403 Forbidden - Credenciais inválidas",
+        "info",
+        0,
+      );
+
+      setCarregando(false);
+      return;
+    }
+
+    // Credenciais válidas: prosseguir com a simulação de rede
     adicionarLog(
       "ICMP",
       "Disparando teste de conectividade (PING) para api.ifood.com.br...",
